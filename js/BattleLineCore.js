@@ -1,4 +1,5 @@
-BattleLine = {}
+BattleLine = {};
+BattleLine.util = {};
 
 BattleLine.MAX_DOMINANCE = 100;
 
@@ -14,8 +15,7 @@ BattleLine.drawMap = function ( canvas, context ) {
     context.strokeRect( xOffset, yOffset, mapData.Dimensions.width, mapData.Dimensions.height );
     
     //Draw edges first, so planets are on top
-    for ( var cid in mapData.Connections ) {
-        var edge = mapData.Connections[cid];
+    for ( var edge of mapData.Connections ) {
         context.strokeStyle = 'black';
         context.lineWidth = 1.0;
         
@@ -32,8 +32,7 @@ BattleLine.drawMap = function ( canvas, context ) {
     }
     
     //Draw planets
-    for ( var pid in mapData.Planets ) {
-        var planet = mapData.Planets[pid];
+    for ( var planet of mapData.Planets ) {
         
         context.strokeStyle = 'black';
         context.lineWidth = 1.0;
@@ -104,16 +103,66 @@ BattleLine.initialize = function ( mapData, team1, team2 ) {
     BattleLine.battleList = [];
     
     //Initialize planet dominance/faction
-    for ( pid in BattleLine.mapData.Planets ) {
-        var planet = BattleLine.mapData.Planets[pid];
-        
+    for ( var planet of BattleLine.mapData.Planets ) {
         if ( planet.owner == 0 ) {
             planet.dominantFaction = (Math.random() > 0.5) ? 1 : 2;
             planet.dominance = 0;
         }
         else {
             planet.dominantFaction = planet.owner;
-            planet.dominace = BattleLine.MAX_DOMINANCE;
+            planet.dominance = BattleLine.MAX_DOMINANCE;
+        }
+    }
+}
+
+BattleLine.util.getNeighbors = function ( planetID ) {
+    var neighborPlanets = [];
+    for ( var edge of BattleLine.mapData.Connections ) {
+        if ( edge[0] == planetID ) {
+            neighborPlanets.push( edge[1] );
+        }
+        else if ( edge[1] == planetID ) {
+            neighborPlanets.push( edge[0] );
+        }
+    }
+    return neighborPlanets;
+}
+
+BattleLine.conquerPlanet = function ( planetID, faction ) {
+    var planet = BattleLine.mapData.Planets[planetID];
+    var neighbors = BattleLine.util.getNeighbors( planetID );
+    
+    if ( neighbors.some( function( pid ) { return BattleLine.mapData.Planets[pid].homeworld && BattleLine.mapData.Planets[pid].owner != faction } ) )
+        return;
+    
+    planet.owner = faction;
+    planet.dominance = BattleLine.MAX_DOMINANCE;
+    planet.dominantFaction = faction;
+    
+    
+    
+    //Adjacent planets are no longer controlled
+    for ( var pid of neighbors ) {
+        var neighboringPlanet = BattleLine.mapData.Planets[pid];
+        if ( neighboringPlanet.owner != faction && neighboringPlanet.dominantFaction != faction ) {
+            neighboringPlanet.owner = 0;
+            neighboringPlanet.dominance = Math.min( 50, neighboringPlanet.dominance );
+        }
+    }
+    
+    //Contested planets can become controlled
+    for ( var pid of neighbors ) {
+        var neighboringPlanet = BattleLine.mapData.Planets[pid];
+        if ( neighboringPlanet.owner == 0 && neighboringPlanet.dominantFaction == faction ) {
+            var nextNeighbors = BattleLine.util.getNeighbors( pid );
+            var contested = nextNeighbors.some( function( e, i, a ) { 
+                return (BattleLine.mapData.Planets[e].owner != 0 && BattleLine.mapData.Planets[e].owner != faction);
+            } );
+            
+            if ( !contested ){
+                neighboringPlanet.owner = faction;
+                neighboringPlanet.dominance = BattleLine.MAX_DOMINANCE;
+            }
         }
     }
 }
