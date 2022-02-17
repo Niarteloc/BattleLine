@@ -44,6 +44,22 @@ BattleLine.drawMap = function ( canvas, context, mapData ) {
         context.arc( planet.position.x + xOffset, planet.position.y + yOffset, planet.size, 0, 2 * Math.PI );
         context.fill();
         context.stroke();
+        
+        //Add homeworld indicator
+        if ( planet.homeworld ) {
+            context.fillStyle = 'gold';
+            context.beginPath();
+            context.arc( planet.position.x + xOffset, planet.position.y + yOffset, 5, 0, 2 * Math.PI );
+            context.fill();
+        }
+        
+        //Add artifact indicator
+        if ( planet.artifact ) {
+            context.fillStyle = 'blue';
+            context.beginPath();
+            context.arc( planet.position.x + xOffset, planet.position.y + yOffset, 5, 0, 2 * Math.PI );
+            context.fill();
+        }
     }
     
 }
