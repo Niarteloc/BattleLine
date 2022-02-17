@@ -1,0 +1,35 @@
+var map1 = {
+    "Dimensions" : {
+        "width" : 200,
+        "height" : 200
+    },
+    "Planets" : [
+    {
+        "id" : 0,
+        "name" : "My Home",
+        "size" : 25,
+        "position" : {
+            "x" : 50,
+            "y" : 50
+        },
+        "homeworld" : true,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 1,
+        "name" : "Enemy Home",
+        "size" : 30,
+        "position" : {
+            "x" : 150,
+            "y" : 120
+        },
+        "homeworld" : true,
+        "artifact" : false,
+        "owner" : 2
+    }
+    ],
+    "Connections" : [
+        [0,1],
+    ]
+}

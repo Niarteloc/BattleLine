@@ -1,0 +1,14 @@
+<html>
+<head>
+<script type="text/javascript" src="js/BattleLineCore.js"></script>
+<script type="text/javascript" src="data/map1.json"></script>
+</head>
+<body>
+<canvas id="display" width="600" height="600" ></canvas>
+<script>
+    var canvas = document.getElementById( 'display' );
+    var context = canvas.getContext( '2d' );
+    
+    BattleLine.drawMap( canvas, context, map1 );
+</script>
+</body>
