@@ -9,6 +9,7 @@
     var canvas = document.getElementById( 'display' );
     var context = canvas.getContext( '2d' );
     
-    BattleLine.drawMap( canvas, context, map1 );
+    BattleLine.initialize( map1, [], [] );
+    BattleLine.drawMap( canvas, context );
 </script>
 </body>

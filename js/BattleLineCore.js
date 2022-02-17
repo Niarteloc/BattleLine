@@ -1,6 +1,9 @@
 BattleLine = {}
 
-BattleLine.drawMap = function ( canvas, context, mapData ) {
+BattleLine.MAX_DOMINANCE = 100;
+
+BattleLine.drawMap = function ( canvas, context ) {
+    var mapData = BattleLine.mapData;
     context.clearRect( 0, 0, canvas.width, canvas.height );
     
     //Offset for canvas dimensions not matching map dimensions, possibly future scrolling
@@ -13,6 +16,8 @@ BattleLine.drawMap = function ( canvas, context, mapData ) {
     //Draw edges first, so planets are on top
     for ( var cid in mapData.Connections ) {
         var edge = mapData.Connections[cid];
+        context.strokeStyle = 'black';
+        context.lineWidth = 1.0;
         
         var startX = mapData.Planets[edge[0]].position.x;
         var startY = mapData.Planets[edge[0]].position.y;
@@ -30,6 +35,9 @@ BattleLine.drawMap = function ( canvas, context, mapData ) {
     for ( var pid in mapData.Planets ) {
         var planet = mapData.Planets[pid];
         
+        context.strokeStyle = 'black';
+        context.lineWidth = 1.0;
+        
         if ( planet.owner == 1 ) {
             context.fillStyle = 'green';
         }
@@ -38,6 +46,13 @@ BattleLine.drawMap = function ( canvas, context, mapData ) {
         }
         else {
             context.fillStyle = 'gray';
+            context.lineWidth = 3.0;
+            if ( planet.dominantFaction == 1 ) {
+                context.strokeStyle = 'green';
+            }
+            else {
+                context.strokeStyle = 'red';
+            }
         }
         
         context.beginPath();
@@ -60,6 +75,45 @@ BattleLine.drawMap = function ( canvas, context, mapData ) {
             context.arc( planet.position.x + xOffset, planet.position.y + yOffset, 5, 0, 2 * Math.PI );
             context.fill();
         }
+        
+        //Draw Dominance
+        if ( planet.owner == 0 ) {
+            if ( planet.dominantFaction == 1 ) {
+                context.fillStyle = 'green';
+            }
+            else {
+                context.fillStyle = 'red';
+            }
+            
+            context.textAlign = 'center';
+            context.font = '20px sans-serif';
+            context.textBaseline = 'middle';
+            context.fillText( planet.dominance, planet.position.x + xOffset, planet.position.y + yOffset );
+        }
     }
     
+}
+
+BattleLine.initialize = function ( mapData, team1, team2 ) {
+    //Initialize global data
+    BattleLine.mapData = mapData;
+    BattleLine.rosters = {
+        "team1" : team1,
+        "team2" : team2
+    };
+    BattleLine.battleList = [];
+    
+    //Initialize planet dominance/faction
+    for ( pid in BattleLine.mapData.Planets ) {
+        var planet = BattleLine.mapData.Planets[pid];
+        
+        if ( planet.owner == 0 ) {
+            planet.dominantFaction = (Math.random() > 0.5) ? 1 : 2;
+            planet.dominance = 0;
+        }
+        else {
+            planet.dominantFaction = planet.owner;
+            planet.dominace = BattleLine.MAX_DOMINANCE;
+        }
+    }
 }
