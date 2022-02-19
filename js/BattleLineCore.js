@@ -96,14 +96,9 @@ BattleLine.drawMap = function ( canvas, context ) {
     
 }
 
-BattleLine.initialize = function ( mapData, team1, team2 ) {
+BattleLine.initialize = function ( mapData ) {
     //Initialize global data
     BattleLine.mapData = mapData;
-    BattleLine.rosters = {
-        "team1" : team1,
-        "team2" : team2
-    };
-    BattleLine.battleList = [];
     
     //Initialize planet dominance/faction
     for ( var planet of BattleLine.mapData.Planets ) {
