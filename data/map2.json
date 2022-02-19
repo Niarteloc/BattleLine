@@ -86,7 +86,7 @@ var map2 = {
         },
         "homeworld" : false,
         "artifact" : false,
-        "owner" : 0
+        "owner" : 1
     },
     {
         "id" : 7,
@@ -110,7 +110,7 @@ var map2 = {
         },
         "homeworld" : false,
         "artifact" : false,
-        "owner" : 0
+        "owner" : 2
     }
     ],
     "Connections" : [

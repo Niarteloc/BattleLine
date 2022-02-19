@@ -20,9 +20,10 @@
         
         var nearestPlanet = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
         
-        console.log( nearestPlanet );
-        BattleLine.conquerPlanet( nearestPlanet, 1 );
-        BattleLine.drawMap( canvas, context );
+        if ( nearestPlanet >= 0 ) {
+            BattleLine.processBattle( nearestPlanet, [], [], 1 );
+            BattleLine.drawMap( canvas, context );
+        }
     });
 </script>
 </body>

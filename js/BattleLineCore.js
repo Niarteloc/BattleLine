@@ -13,6 +13,8 @@ BattleLine.drawMap = function ( canvas, context ) {
     var yOffset = (canvas.height - mapData.Dimensions.height) / 2;
     
     //Draw bounding box
+    context.strokeStyle = 'black';
+    context.lineWidth = 2.0;
     context.strokeRect( xOffset, yOffset, mapData.Dimensions.width, mapData.Dimensions.height );
     
     //Draw edges first, so planets are on top
@@ -167,14 +169,36 @@ BattleLine.conquerPlanet = function ( planetID, faction ) {
         var neighboringPlanet = BattleLine.mapData.Planets[pid];
         if ( neighboringPlanet.owner == 0 && neighboringPlanet.dominantFaction == faction ) {
             var nextNeighbors = BattleLine.util.getNeighbors( pid );
-            var contested = nextNeighbors.some( function( e, i, a ) { 
-                return (BattleLine.mapData.Planets[e].owner != 0 && BattleLine.mapData.Planets[e].owner != faction);
+            var contested = nextNeighbors.some( function( pid ) { 
+                return (BattleLine.mapData.Planets[pid].owner != 0 && BattleLine.mapData.Planets[pid].owner != faction);
             } );
             
             if ( !contested ){
                 neighboringPlanet.owner = faction;
                 neighboringPlanet.dominance = BattleLine.MAX_DOMINANCE;
             }
+        }
+    }
+}
+
+BattleLine.processBattle = function ( planetID, teamWinner, teamLoser, victorFaction ) {
+    var planet = BattleLine.mapData.Planets[planetID];
+    
+    if ( planet.owner != 0 ) {
+        throw "Can't fight on a controlled planet!";
+    }
+    
+    if ( planet.dominantFaction == victorFaction ) {
+        planet.dominance += 5;
+        if ( planet.dominance >= BattleLine.MAX_DOMINANCE ) {
+            BattleLine.conquerPlanet( planetID, victorFaction );
+        }
+    }
+    else {
+        planet.dominance -= 5;
+        if ( planet.dominance < 0 ) {
+            planet.dominantFaction = victorFaction;
+            planet.dominance = 0;
         }
     }
 }
