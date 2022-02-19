@@ -132,7 +132,7 @@ BattleLine.util.getNeighbors = function ( planetID ) {
 BattleLine.util.getPlanetAtXY = function ( x, y ) {
     for ( var planet of BattleLine.mapData.Planets ) {
         var xDelta = x - planet.position.x;
-        var yDelta = x - planet.position.y;
+        var yDelta = y - planet.position.y;
         var distance = (xDelta * xDelta) + (yDelta * yDelta) - (planet.size * planet.size);
         if ( distance < 0 ) {
             return planet.id;

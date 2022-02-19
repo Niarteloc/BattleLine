@@ -11,8 +11,18 @@
     var context = canvas.getContext( '2d' );
     
     BattleLine.initialize( map2, [], [] );
-    BattleLine.conquerPlanet( 4, 1 );
+    
     BattleLine.drawMap( canvas, context );
     
+    canvas.addEventListener( 'click', function (event) {
+        var xOffset = canvas.offsetLeft + (canvas.width - BattleLine.mapData.Dimensions.width) / 2;
+        var yOffset = canvas.offsetTop + (canvas.height - BattleLine.mapData.Dimensions.height) / 2;
+        
+        var nearestPlanet = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
+        
+        console.log( nearestPlanet );
+        BattleLine.conquerPlanet( nearestPlanet, 1 );
+        BattleLine.drawMap( canvas, context );
+    });
 </script>
 </body>
