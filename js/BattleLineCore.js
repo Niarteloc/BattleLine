@@ -2,6 +2,7 @@ BattleLine = {};
 BattleLine.util = {};
 
 BattleLine.MAX_DOMINANCE = 100;
+BattleLine.BREAKTHROUGH = 50;
 
 BattleLine.drawMap = function ( canvas, context ) {
     var mapData = BattleLine.mapData;
@@ -128,6 +129,17 @@ BattleLine.util.getNeighbors = function ( planetID ) {
     return neighborPlanets;
 }
 
+BattleLine.util.getPlanetAtXY = function ( x, y ) {
+    for ( var planet of BattleLine.mapData.Planets ) {
+        var xDelta = x - planet.position.x;
+        var yDelta = x - planet.position.y;
+        var distance = (xDelta * xDelta) + (yDelta * yDelta) - (planet.size * planet.size);
+        if ( distance < 0 ) {
+            return planet.id;
+        }
+    }
+}
+
 BattleLine.conquerPlanet = function ( planetID, faction ) {
     var planet = BattleLine.mapData.Planets[planetID];
     var neighbors = BattleLine.util.getNeighbors( planetID );
@@ -146,7 +158,7 @@ BattleLine.conquerPlanet = function ( planetID, faction ) {
         var neighboringPlanet = BattleLine.mapData.Planets[pid];
         if ( neighboringPlanet.owner != faction && neighboringPlanet.dominantFaction != faction ) {
             neighboringPlanet.owner = 0;
-            neighboringPlanet.dominance = Math.min( 50, neighboringPlanet.dominance );
+            neighboringPlanet.dominance = Math.min( BattleLine.BREAKTHROUGH, neighboringPlanet.dominance );
         }
     }
     
