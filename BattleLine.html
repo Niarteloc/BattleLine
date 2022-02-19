@@ -1,6 +1,7 @@
 <html>
 <head>
 <script type="text/javascript" src="js/BattleLineCore.js"></script>
+<script type="text/javascript" src="js/BattleLineFactions.js"></script>
 <script type="text/javascript" src="data/map1.json"></script>
 <script type="text/javascript" src="data/map2.json"></script>
 </head>
@@ -10,7 +11,10 @@
     var canvas = document.getElementById( 'display' );
     var context = canvas.getContext( '2d' );
     
-    BattleLine.initialize( map2, [], [] );
+    BattleLine.initialize( map2 );
+    BattleLine.Factions.initialize( 3 );
+    console.log( BattleLine.Factions.team1 );
+    console.log( BattleLine.Factions.team2 );
     
     BattleLine.drawMap( canvas, context );
     
@@ -21,7 +25,7 @@
         var nearestPlanet = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
         
         if ( nearestPlanet >= 0 ) {
-            BattleLine.processBattleResult( nearestPlanet, 10, 1 );
+            BattleLine.processBattleResult( nearestPlanet, 10, BattleLine.Factions.simBattle( BattleLine.Factions.team1, BattleLine.Factions.team2 ) );
             BattleLine.drawMap( canvas, context );
         }
     });

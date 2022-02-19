@@ -13,7 +13,7 @@ BattleLine.Factions.initialize = function ( teamSize ) {
             "skill" : (Math.random() * 1000 + 1000),
             "faction" : 1
         });
-        BattleLine.Factions.team1.push({
+        BattleLine.Factions.team2.push({
             "id" : playerID++,
             "rank" : 1,
             "progression" : 4,
@@ -46,7 +46,7 @@ BattleLine.Factions.simBattle = function ( team1, team2 ) {
     team1.forEach( (player) => team1Skill += player.skill );
     team2.forEach( (player) => team2Skill += player.skill );
     
-    if ( team1Skill > team2Skill ) {
+    if ( (team1Skill / team2Skill) > (Math.random() * 2) ) {
         team1.forEach( BattleLine.Factions.playerWin );
         team2.forEach( BattleLine.Factions.playerLoss );
         return 1;
