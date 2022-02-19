@@ -2,6 +2,7 @@
 <head>
 <script type="text/javascript" src="js/BattleLineCore.js"></script>
 <script type="text/javascript" src="data/map1.json"></script>
+<script type="text/javascript" src="data/map2.json"></script>
 </head>
 <body>
 <canvas id="display" width="600" height="600" ></canvas>
@@ -9,7 +10,7 @@
     var canvas = document.getElementById( 'display' );
     var context = canvas.getContext( '2d' );
     
-    BattleLine.initialize( map1, [], [] );
+    BattleLine.initialize( map2, [], [] );
     BattleLine.conquerPlanet( 4, 1 );
     BattleLine.drawMap( canvas, context );
     
