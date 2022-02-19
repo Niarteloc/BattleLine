@@ -181,7 +181,7 @@ BattleLine.conquerPlanet = function ( planetID, faction ) {
     }
 }
 
-BattleLine.processBattle = function ( planetID, teamWinner, teamLoser, victorFaction ) {
+BattleLine.processBattleResult = function ( planetID, dominanceChange, victorFaction ) {
     var planet = BattleLine.mapData.Planets[planetID];
     
     if ( planet.owner != 0 ) {
@@ -189,13 +189,13 @@ BattleLine.processBattle = function ( planetID, teamWinner, teamLoser, victorFac
     }
     
     if ( planet.dominantFaction == victorFaction ) {
-        planet.dominance += 5;
+        planet.dominance += dominanceChange;
         if ( planet.dominance >= BattleLine.MAX_DOMINANCE ) {
             BattleLine.conquerPlanet( planetID, victorFaction );
         }
     }
     else {
-        planet.dominance -= 5;
+        planet.dominance -= dominanceChange;
         if ( planet.dominance < 0 ) {
             planet.dominantFaction = victorFaction;
             planet.dominance = 0;

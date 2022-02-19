@@ -21,7 +21,7 @@
         var nearestPlanet = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
         
         if ( nearestPlanet >= 0 ) {
-            BattleLine.processBattle( nearestPlanet, [], [], 1 );
+            BattleLine.processBattleResult( nearestPlanet, 10, 1 );
             BattleLine.drawMap( canvas, context );
         }
     });
