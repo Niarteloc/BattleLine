@@ -46,10 +46,7 @@ BattleLine.Factions.simBattle = function ( team1, team2 ) {
     team1.forEach( (player) => team1Skill += player.skill );
     team2.forEach( (player) => team2Skill += player.skill );
     
-
     var winChance = 1.0 / (1 + Math.pow(10,(team2Skill/team2.length - team1Skill/team1.length)/400.0));
-    
-    console.log(winChance);
     
     if ( winChance > Math.random() ) {
         team1.forEach( BattleLine.Factions.playerWin );

@@ -141,14 +141,13 @@ BattleLine.conquerPlanet = function ( planetID, faction ) {
     var planet = BattleLine.mapData.Planets[planetID];
     var neighbors = BattleLine.util.getNeighbors( planetID );
     
+    planet.dominance = BattleLine.MAX_DOMINANCE;
+    planet.dominantFaction = faction;
+    
     if ( neighbors.some( function( pid ) { return BattleLine.mapData.Planets[pid].homeworld && BattleLine.mapData.Planets[pid].owner != faction } ) )
         return;
     
     planet.owner = faction;
-    planet.dominance = BattleLine.MAX_DOMINANCE;
-    planet.dominantFaction = faction;
-    
-    
     
     //Adjacent planets are no longer controlled
     for ( var pid of neighbors ) {
