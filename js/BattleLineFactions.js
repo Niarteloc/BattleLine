@@ -57,3 +57,23 @@ BattleLine.Factions.simBattle = function ( team1, team2 ) {
         return 2;
     }
 }
+
+BattleLine.Factions.updateDisplay = function () {
+    var Team1Box = "Team 1<br>";
+    var Team2Box = "Team 2<br>";
+    var PlanetBox = "Planets<br>";
+    for ( var player of BattleLine.Factions.team1 ) {
+        Team1Box += Math.round(player.skill) + "<br>";
+    }
+    for ( var player of BattleLine.Factions.team2 ) {
+        Team2Box += Math.round(player.skill) + "<br>";
+    }
+    var sortedPlanets = [...BattleLine.mapData.Planets];
+    sortedPlanets = sortedPlanets.sort((x,y) => y.priority[0] - x.priority[0]);
+    for ( var planet of sortedPlanets ) {
+        PlanetBox += "<span style='float:left'>" + planet.name + "</span><span style='float:right'> " + planet.priority + "</span><br>";
+    }
+    document.getElementById("team1").innerHTML = Team1Box;
+    document.getElementById("team2").innerHTML = Team2Box;
+    document.getElementById("planets").innerHTML = PlanetBox;
+}

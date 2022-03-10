@@ -24,14 +24,21 @@
     
     BattleLine.drawMap( canvas, context );
     
-    canvas.addEventListener( 'click', function (event) {
+    canvas.addEventListener( 'mousedown', function (event) {
         var xOffset = canvas.offsetLeft + (canvas.width - BattleLine.mapData.Dimensions.width) / 2;
         var yOffset = canvas.offsetTop + (canvas.height - BattleLine.mapData.Dimensions.height) / 2;
         
-        var nearestPlanet = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
+        var nearestPlanetID = BattleLine.util.getPlanetAtXY( event.pageX - xOffset, event.pageY - yOffset );
         
-        if ( nearestPlanet >= 0 ) {
-            BattleLine.processBattleResult( nearestPlanet, 10, BattleLine.Factions.simBattle( BattleLine.Factions.team1, BattleLine.Factions.team2 ) );
+        if ( nearestPlanetID >= 0 ) {
+            var nearestPlanet = BattleLine.mapData.Planets[nearestPlanetID];
+            if ( event.button == 0 ) {
+                nearestPlanet.priority[0] = Math.min(10, nearestPlanet.priority[0] + 1);
+            }
+            else if ( event.button == 2 ) {
+                nearestPlanet.priority[0] = Math.max(1, nearestPlanet.priority[0] - 1);
+            }
+            BattleLine.Factions.updateDisplay();
             BattleLine.drawMap( canvas, context );
         }
     });

@@ -110,6 +110,8 @@ BattleLine.initialize = function ( mapData ) {
             planet.dominantFaction = planet.owner;
             planet.dominance = BattleLine.MAX_DOMINANCE;
         }
+        
+        planet.priority = [5,5];
     }
 }
 
