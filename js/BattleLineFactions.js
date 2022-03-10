@@ -68,12 +68,39 @@ BattleLine.Factions.updateDisplay = function () {
     for ( var player of BattleLine.Factions.team2 ) {
         Team2Box += Math.round(player.skill) + "<br>";
     }
-    var sortedPlanets = [...BattleLine.mapData.Planets];
-    sortedPlanets = sortedPlanets.sort((x,y) => y.priority[0] - x.priority[0]);
+    var sortedPlanets = [...BattleLine.mapData.Planets].sort((x,y) => y.priority[0] - x.priority[0]);
     for ( var planet of sortedPlanets ) {
         PlanetBox += "<span style='float:left'>" + planet.name + "</span><span style='float:right'> " + planet.priority + "</span><br>";
     }
     document.getElementById("team1").innerHTML = Team1Box;
     document.getElementById("team2").innerHTML = Team2Box;
     document.getElementById("planets").innerHTML = PlanetBox;
+}
+
+BattleLine.Factions.generateBattleQueue = function () {
+    var battleQueue = [];
+    var contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
+    
+    var playerCount = Math.min(BattleLine.Factions.team1.length, BattleLine.Factions.team2.length);
+    var team1roster = BattleLine.Factions.team1.slice(0, playerCount);
+    var team2roster = BattleLine.Factions.team2.slice(0, playerCount);
+    
+    var currentSelector = Math.random() > 0.5;
+    
+    while ( team1roster.length > 0 ) {
+        if ( contestedPlanets.length == 0 ) {
+            contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
+        }
+        
+        contestedPlanets = contestedPlanets.sort((x,y) => y.priority[currentSelector] - x.priority[currentSelector]);
+        currentSelector = !currentSelector;
+        
+        var targetPlanet = contestedPlanets.shift();
+        
+        var team1BattlePlayers = team1roster.splice(0,2);
+        var team2BattlePlayers = team2roster.splice(0,2);
+        
+        battleQueue.push([targetPlanet, team1BattlePlayers, team2BattlePlayers]);
+    }
+    return battleQueue;
 }
