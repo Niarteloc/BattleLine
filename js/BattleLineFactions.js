@@ -63,10 +63,10 @@ BattleLine.Factions.updateDisplay = function () {
     var Team2Box = "Team 2<br>";
     var PlanetBox = "Planets<br>";
     for ( var player of BattleLine.Factions.team1 ) {
-        Team1Box += Math.round(player.skill) + "<br>";
+        Team1Box += "<span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
     }
     for ( var player of BattleLine.Factions.team2 ) {
-        Team2Box += Math.round(player.skill) + "<br>";
+        Team2Box += "<span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
     }
     var sortedPlanets = [...BattleLine.mapData.Planets].sort((x,y) => y.priority[0] - x.priority[0]);
     for ( var planet of sortedPlanets ) {
@@ -82,8 +82,8 @@ BattleLine.Factions.generateBattleQueue = function () {
     var contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
     
     var playerCount = Math.min(BattleLine.Factions.team1.length, BattleLine.Factions.team2.length);
-    var team1roster = BattleLine.Factions.team1.slice(0, playerCount);
-    var team2roster = BattleLine.Factions.team2.slice(0, playerCount);
+    var team1roster = BattleLine.Factions.team1.sort((x,y) => y.rank - x.rank).slice(0, playerCount);
+    var team2roster = BattleLine.Factions.team2.sort((x,y) => y.rank - x.rank).slice(0, playerCount);
     
     var currentSelector = Math.random() > 0.5;
     
@@ -92,7 +92,8 @@ BattleLine.Factions.generateBattleQueue = function () {
             contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
         }
         
-        contestedPlanets = contestedPlanets.sort((x,y) => y.priority[currentSelector] - x.priority[currentSelector]);
+        var teamIndex = currentSelector ? 0 : 1;
+        contestedPlanets = contestedPlanets.sort((x,y) => y.priority[teamIndex] - x.priority[teamIndex]);
         currentSelector = !currentSelector;
         
         var targetPlanet = contestedPlanets.shift();
@@ -103,4 +104,16 @@ BattleLine.Factions.generateBattleQueue = function () {
         battleQueue.push([targetPlanet, team1BattlePlayers, team2BattlePlayers]);
     }
     return battleQueue;
+}
+
+BattleLine.Factions.evaluateBattleQueue = function ( battleQueue ) {
+    for ( var battle of battleQueue ) {
+        var team1Roster = battle[1];
+        var team2Roster = battle[2];
+        var planet = battle[0]
+        
+        var battleResult = BattleLine.Factions.simBattle( team1Roster, team2Roster );
+        console.log( battleResult );
+        BattleLine.processBattleResult( planet.id, 10, battleResult );
+    }
 }

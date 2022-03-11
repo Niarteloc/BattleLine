@@ -9,9 +9,9 @@
 <canvas id="display" width="600" height="600" ></canvas>
 <div id="teamList" style="position:absolute; top:0px; left:600px">
 
-<div id="team1" style="position:absolute; top:0px; left:0px; width:200px">Team 1</div>
-<div id="team2" style="position:absolute; top:0px; left:200px; width:200px">Team 2</div>
-<div id="planets" style="position:absolute; top:0px; left:400px; width:200px">Planets</div>
+<div id="team1" style="position:absolute; top:0px; left:0px; width:150px">Team 1</div>
+<div id="team2" style="position:absolute; top:0px; left:200px; width:150px">Team 2</div>
+<div id="planets" style="position:absolute; top:0px; left:400px; width:150px">Planets</div>
 </div>
 <script>
     var canvas = document.getElementById( 'display' );
@@ -48,7 +48,9 @@
     document.addEventListener( 'keydown', function(event) {
         console.log(event.keyCode);
         if ( event.keyCode == 32 ) {
-            console.log( BattleLine.Factions.generateBattleQueue() );
+            BattleLine.Factions.evaluateBattleQueue( BattleLine.Factions.generateBattleQueue() );
+            BattleLine.Factions.updateDisplay();
+            BattleLine.drawMap( canvas, context );
         }
     });
 </script>
