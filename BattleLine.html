@@ -4,14 +4,15 @@
 <script type="text/javascript" src="js/BattleLineFactions.js"></script>
 <script type="text/javascript" src="data/map1.json"></script>
 <script type="text/javascript" src="data/map2.json"></script>
+<script type="text/javascript" src="data/namelist.json"></script>
 </head>
 <body>
 <canvas id="display" width="600" height="600" ></canvas>
 <div id="teamList" style="position:absolute; top:0px; left:600px">
 
-<div id="team1" style="position:absolute; top:0px; left:0px; width:150px">Team 1</div>
-<div id="team2" style="position:absolute; top:0px; left:200px; width:150px">Team 2</div>
-<div id="planets" style="position:absolute; top:0px; left:400px; width:150px">Planets</div>
+<div id="team1" style="position:absolute; top:0px; left:0px; width:200px">Team 1</div>
+<div id="team2" style="position:absolute; top:0px; left:225px; width:200px">Team 2</div>
+<div id="planets" style="position:absolute; top:0px; left:450px; width:150px">Planets</div>
 </div>
 <script>
 
@@ -21,11 +22,11 @@
         var PlanetBox = "Planets<br>";
         for ( var player of BattleLine.Factions.team1 ) {
             var active = player.active ? "checked" : ""
-            Team1Box += "<input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'><span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
+            Team1Box += "<span style='float:left'><input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'>" + player.name + " : " + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
         }
         for ( var player of BattleLine.Factions.team2 ) {
             var active = player.active ? "checked" : ""
-            Team2Box += "<input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'><span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
+            Team2Box += "<span style='float:left'><input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'>" + player.name + " : " + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
         }
         var sortedPlanets = [...BattleLine.mapData.Planets].sort((x,y) => y.priority[0] - x.priority[0]);
         for ( var planet of sortedPlanets ) {
@@ -39,7 +40,7 @@
     var context = canvas.getContext( '2d' );
     
     BattleLine.initialize( map2 );
-    BattleLine.Factions.initialize( 3 );
+    BattleLine.Factions.initialize( 10, names );
     console.log( BattleLine.Factions.team1 );
     console.log( BattleLine.Factions.team2 );
     

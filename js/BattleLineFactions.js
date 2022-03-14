@@ -1,26 +1,35 @@
 BattleLine.Factions = {}
 
-BattleLine.Factions.initialize = function ( teamSize ) {
+BattleLine.Factions.initialize = function ( teamSize, nameList ) {
     BattleLine.Factions.team1 = [];
     BattleLine.Factions.team2 = [];
+    var name = "";
     
     var playerID = 0;
     for ( var i = 0; i < teamSize; i++ ) {
+        if ( nameList ) {
+            name = nameList.splice(Math.floor(Math.random()*nameList.length), 1);
+        }
         BattleLine.Factions.team1.push({
             "id" : playerID++,
             "rank" : 1,
             "progression" : 4,
             "skill" : (Math.random() * 1000 + 1000),
             "faction" : 1,
-            "active" : true
+            "active" : true,
+            "name" : name
         });
+        if ( nameList ) {
+            name = nameList.splice(Math.floor(Math.random()*nameList.length), 1);
+        }
         BattleLine.Factions.team2.push({
             "id" : playerID++,
             "rank" : 1,
             "progression" : 4,
             "skill" : (Math.random() * 1000 + 1000),
             "faction" : 2,
-            "active" : true
+            "active" : true,
+            "name" : name
         });
     }
 }
