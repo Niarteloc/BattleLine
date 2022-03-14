@@ -41,8 +41,6 @@
     
     BattleLine.initialize( map2 );
     BattleLine.Factions.initialize( 10, names );
-    console.log( BattleLine.Factions.team1 );
-    console.log( BattleLine.Factions.team2 );
     
     BattleLine.drawMap( canvas, context );
     updateDisplay();
@@ -72,10 +70,7 @@
         if ( event.keyCode == 32 ) {
             var team1Active = BattleLine.Factions.team1.filter( (p) => p.active );
             var team2Active = BattleLine.Factions.team2.filter( (p) => p.active );
-            console.log(team1Active);
-            console.log(team2Active);
             var battleQueue = BattleLine.Factions.generateBattleQueue( team1Active, team2Active );
-            console.log(battleQueue)
             BattleLine.Factions.evaluateBattleQueue( battleQueue );
             updateDisplay();
             BattleLine.drawMap( canvas, context );

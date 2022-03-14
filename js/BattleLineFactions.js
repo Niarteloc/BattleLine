@@ -79,7 +79,7 @@ BattleLine.Factions.generateBattleQueue = function (team1Roster, team2Roster) {
     var battleQueue = [];
     var contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
     
-    var playerCount = Math.min(BattleLine.Factions.team1.length, BattleLine.Factions.team2.length);
+    var playerCount = Math.min(team1Roster.length, team2Roster.length);
     var team1PVP = team1Roster.sort((x,y) => y.rank - x.rank).slice(0, playerCount);
     var team1PVE = team1Roster.slice(playerCount);
     var team2PVP = team2Roster.sort((x,y) => y.rank - x.rank).slice(0, playerCount);
@@ -103,17 +103,49 @@ BattleLine.Factions.generateBattleQueue = function (team1Roster, team2Roster) {
         
         battleQueue.push([targetPlanet, team1BattlePlayers, team2BattlePlayers]);
     }
-    //Add PVE remainders
+    
+    var PVEteam = [];
+    var teamIndex;
+    
+    if ( team1PVE.length > 0 ) {
+        PVEteam = team1PVE;
+        teamIndex = 0;
+    }
+    else {
+        PVEteam = team2PVE;
+        teamIndex = 1;
+    }
+    
+    while ( PVEteam.length > 0 ) {
+        if ( contestedPlanets.length == 0 ) {
+            contestedPlanets = BattleLine.mapData.Planets.filter( p => p.owner == 0 );
+        }
+        contestedPlanets = contestedPlanets.sort((x,y) => y.priority[teamIndex] - x.priority[teamIndex]);
+        
+        var targetPlanet = contestedPlanets.shift();
+        
+        var PVEBattlePlayers = PVEteam.splice(0,2);
+        
+        battleQueue.push([targetPlanet, PVEBattlePlayers, (teamIndex + 1)]);
+    }
     return battleQueue;
 }
 
 BattleLine.Factions.evaluateBattleQueue = function ( battleQueue ) {
     for ( var battle of battleQueue ) {
-        var team1Roster = battle[1];
-        var team2Roster = battle[2];
         var planet = battle[0]
         
-        var battleResult = BattleLine.Factions.simBattle( team1Roster, team2Roster );
-        BattleLine.processBattleResult( planet.id, 10, battleResult );
+        if ( battle[2].length ) {
+            var team1Roster = battle[1];
+            var team2Roster = battle[2];
+            var battleResult = BattleLine.Factions.simBattle( team1Roster, team2Roster );
+            var rankBonus = Math.max(...(battleResult ? team1Roster : team2Roster).map( (o) => o.rank ));
+            BattleLine.processBattleResult( planet.id, 12 + rankBonus, battleResult );
+        }
+        else {
+            var pveTeam = battle[1];
+            var faction = battle[2];
+            BattleLine.processBattleResult( planet.id, 6, faction );
+        }
     }
 }
