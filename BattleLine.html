@@ -14,6 +14,27 @@
 <div id="planets" style="position:absolute; top:0px; left:400px; width:150px">Planets</div>
 </div>
 <script>
+
+    updateDisplay = function () {
+        var Team1Box = "Team 1<br>";
+        var Team2Box = "Team 2<br>";
+        var PlanetBox = "Planets<br>";
+        for ( var player of BattleLine.Factions.team1 ) {
+            var active = player.active ? "checked" : ""
+            Team1Box += "<input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'><span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
+        }
+        for ( var player of BattleLine.Factions.team2 ) {
+            var active = player.active ? "checked" : ""
+            Team2Box += "<input type='checkbox' id='"+player.id+"' "+active+" onchange='BattleLine.Factions.togglePlayer("+player.id+")'><span style='float:left'>" + Math.round(player.skill) + "</span><span style='float:right'> " + player.rank + "</span><br>";
+        }
+        var sortedPlanets = [...BattleLine.mapData.Planets].sort((x,y) => y.priority[0] - x.priority[0]);
+        for ( var planet of sortedPlanets ) {
+            PlanetBox += "<span style='float:left'>" + planet.name + "</span><span style='float:right'> " + planet.priority + "</span><br>";
+        }
+        document.getElementById("team1").innerHTML = Team1Box;
+        document.getElementById("team2").innerHTML = Team2Box;
+        document.getElementById("planets").innerHTML = PlanetBox;
+    }
     var canvas = document.getElementById( 'display' );
     var context = canvas.getContext( '2d' );
     
@@ -23,6 +44,7 @@
     console.log( BattleLine.Factions.team2 );
     
     BattleLine.drawMap( canvas, context );
+    updateDisplay();
     
     canvas.addEventListener( 'mousedown', function (event) {
         var xOffset = canvas.offsetLeft + (canvas.width - BattleLine.mapData.Dimensions.width) / 2;
@@ -38,7 +60,7 @@
             else if ( event.button == 2 ) {
                 nearestPlanet.priority[0] = Math.max(1, nearestPlanet.priority[0] - 1);
             }
-            BattleLine.Factions.updateDisplay();
+            updateDisplay();
             BattleLine.drawMap( canvas, context );
         }
     });
@@ -46,10 +68,15 @@
         event.preventDefault();
     });
     document.addEventListener( 'keydown', function(event) {
-        console.log(event.keyCode);
         if ( event.keyCode == 32 ) {
-            BattleLine.Factions.evaluateBattleQueue( BattleLine.Factions.generateBattleQueue() );
-            BattleLine.Factions.updateDisplay();
+            var team1Active = BattleLine.Factions.team1.filter( (p) => p.active );
+            var team2Active = BattleLine.Factions.team2.filter( (p) => p.active );
+            console.log(team1Active);
+            console.log(team2Active);
+            var battleQueue = BattleLine.Factions.generateBattleQueue( team1Active, team2Active );
+            console.log(battleQueue)
+            BattleLine.Factions.evaluateBattleQueue( battleQueue );
+            updateDisplay();
             BattleLine.drawMap( canvas, context );
         }
     });
