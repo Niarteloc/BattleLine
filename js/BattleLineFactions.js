@@ -3,7 +3,7 @@ BattleLine.Factions = {}
 BattleLine.Factions.initialize = function ( teamSize, nameList ) {
     BattleLine.Factions.team1 = [];
     BattleLine.Factions.team2 = [];
-    BattleLine.Factions.factionMetal = [0, 0];
+    BattleLine.Factions.factionMetal = [0, 0, 0];
     var name = "";
     
     var playerID = 0;
@@ -167,8 +167,8 @@ BattleLine.Factions.evaluateBattleQueue = function ( battleQueue ) {
             var rankBonus = Math.max(...(battleResult ? team1Roster : team2Roster).map( (o) => o.rank ));
             
             var dominanceDelta = BattleLine.Factions.computeDominanceDelta( rankBonus, planet.id, battleResult );
-            BattleLine.Factions.factionMetal[0] += 100;
             BattleLine.Factions.factionMetal[1] += 100;
+            BattleLine.Factions.factionMetal[2] += 100;
             BattleLine.processBattleResult( planet.id, dominanceDelta, battleResult );
         }
         else {

@@ -135,8 +135,9 @@ BattleLine.Structures.buildStructure = function ( planetId, typeId, faction ) {
     var planet = BattleLine.mapData.Planets[planetId];
     
     if ( planet.owner != faction ) throw "Can't build on unowned planet!";
-    if ( BattleLine.Structures.StructureTypes[typeId].metalCost > BattleLine.Factions.factionMetal[faction - 1] ) throw "Not enough metal to build!";
+    if ( BattleLine.Structures.StructureTypes[typeId].metalCost > BattleLine.Factions.factionMetal[faction] ) throw "Not enough metal to build!";
     
+    BattleLine.Factions.factionMetal[faction] -= BattleLine.Structures.StructureTypes[typeId].metalCost;
     var structure = BattleLine.Structures.newStructure( typeId );
     structure.id = BattleLine.Structures.StructureList.length;
     structure.planetId = planetId;
@@ -240,12 +241,11 @@ BattleLine.Structures.drawStructures = function ( canvas, context ) {
                         break;
                 }
                 
-                console.log(sID,boxCount,boxColor);
                 context.strokeStyle = 'black';
                 context.lineWidth = 1.0;
                 context.fillStyle = boxColor;
                 for ( var i = 0; i < boxCount; i++ ){
-                    var xPos = planet.position.x - planet.size + xOffset;
+                    var xPos = planet.position.x - planet.size + xOffset + 5 * i;
                     var yPos = planet.position.y - planet.size + yOffset + 5 * row;
                     context.fillRect( xPos, yPos, 4, 4 );
                     context.strokeRect( xPos, yPos, 4, 4 );
