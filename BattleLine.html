@@ -2,6 +2,7 @@
 <head>
 <script type="text/javascript" src="js/BattleLineCore.js"></script>
 <script type="text/javascript" src="js/BattleLineFactions.js"></script>
+<script type="text/javascript" src="js/BattleLineStructures.js"></script>
 <script type="text/javascript" src="data/map1.json"></script>
 <script type="text/javascript" src="data/map2.json"></script>
 <script type="text/javascript" src="data/namelist.json"></script>
@@ -41,6 +42,7 @@
     
     BattleLine.initialize( map2 );
     BattleLine.Factions.initialize( 10, names );
+    BattleLine.Structures.initialize();
     
     BattleLine.drawMap( canvas, context );
     updateDisplay();
@@ -72,6 +74,7 @@
             var team2Active = BattleLine.Factions.team2.filter( (p) => p.active );
             var battleQueue = BattleLine.Factions.generateBattleQueue( team1Active, team2Active );
             BattleLine.Factions.evaluateBattleQueue( battleQueue );
+            BattleLine.Structures.activateStructures();
             updateDisplay();
             BattleLine.drawMap( canvas, context );
         }

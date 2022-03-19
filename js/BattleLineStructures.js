@@ -6,7 +6,7 @@ BattleLine.Structures.StructureTypes = [
         "name" : "Power Generator Unit",
         "activationTurns" : 2,
         "metalCost" : 100,
-        "powerCost" : 0,
+        "powerCost" : -50,
         "repairRequired" : 0
     },
     {
@@ -14,14 +14,14 @@ BattleLine.Structures.StructureTypes = [
         "name" : "Orbital Solar Array",
         "activationTurns" : 3,
         "metalCost" : 275,
-        "powerCost" : 0
+        "powerCost" : -100
     },
     {
         "typeId" : 2,
         "name" : "Planetary Geothermal Tap",
         "activationTurns" : 6,
         "metalCost" : 625,
-        "powerCost" : 0,
+        "powerCost" : -250,
         "repairRequired" : 0
     },
     {
@@ -90,7 +90,7 @@ BattleLine.Structures.StructureTypes = [
     },
     {
         "typeId" : 11,
-        "name" : "Artefact",
+        "name" : "Artifact",
         "activationTurns" : 24,
         "metalCost" : 500, //Cost is for accelerating activation, not able to build this structure!
         "powerCost" : 300,
@@ -117,7 +117,15 @@ BattleLine.Structures.initialize = function () {
             wormhole.id = structureId;
             wormhole.planetId = planet.id;
             planet.structures.push( wormhole );
-            BattleLine.Structures.StructureList.push(wormhole);
+            BattleLine.Structures.StructureList.push( wormhole );
+            structureId++;
+        }
+        if ( planet.artifact ) {
+            var artifact = BattleLine.Structures.newStructure( 11 );
+            artifact.id = structureId;
+            artifact.planetId = planet.id;
+            planet.structures.push( artifact );
+            BattleLine.Structures.StructureList.push( artifact );
             structureId++;
         }
     }
@@ -134,4 +142,33 @@ BattleLine.Structures.buildStructure = function ( planetId, typeId, faction ) {
     structure.planetId = planetId;
     planet.structures.push(structure);
     BattleLine.Structures.StructureList.push(structure);
+}
+
+BattleLine.Structures.activateStructures = function () {
+    var energyProducers = BattleLine.Structures.StructureList.filter( (structure) => structure.typeId < 3 );
+    var energyConsumers = BattleLine.Structures.StructureList.filter( (structure) => structure.typeId >= 3 );
+    var factionEnergy = [];
+    
+    for ( var eStruct of energyProducers ) {
+        if ( eStruct.activationTurns == 0 ) {
+            var structureOwner = BattleLine.mapData.Planets[eStruct.planetId].owner;
+            factionEnergy[structureOwner] -= eStruct.powerCost;
+        }
+        else {
+            eStruct.activationTurns--;
+        }
+    }
+    
+    for ( var structure of energyConsumers ) {
+        var structureOwner = BattleLine.mapData.Planets[structure.planetId].owner;
+        if ( factionEnergy[structureOwner] >= structure.powerCost ) {
+            factionEnergy[structureOwner] -= structure.powerCost;
+            if ( structure.activationTurns > 0 ) {
+                structure.activationTurns--;
+            }
+        }
+        else {
+            structure.activationTurns = BattleLine.Structures.StructureTypes[structure.typeId].activationTurns;
+        }
+    }
 }

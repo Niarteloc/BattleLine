@@ -132,6 +132,30 @@ BattleLine.Factions.generateBattleQueue = function (team1Roster, team2Roster) {
     return battleQueue;
 }
 
+BattleLine.Factions.computeDominanceDelta = function ( rankBonus, planetId, faction ) {
+    var structureBonus = 0;
+    var neighbors = BattleLine.util.getNeighbors( planetId );
+    for ( var neighborId of neighbors ) {
+        var planet = BattleLine.mapData.Planets[neighborId];
+        for ( var structure of planet.structures ) {
+            if ( planet.owner == faction ) {
+                if ( structure.typeId == 3 && structure.activationTurns == 0 ) {
+                    structureBonus += 2 // Wormhole
+                }
+                else if ( structure.typeId == 4 && structure.activationTurns == 0 ) {
+                    structureBonus += 3 // Improved Wormhole
+                }
+            }
+            else if ( planet.owner != 0 ) {
+                if ( structure.typeId == 5 && structure.activationTurns == 0 ) {
+                    structureBonus -= 3 // Wormhole Inhibitor
+                }
+            }
+        }
+    }
+    return 12 + structureBonus + rankBonus;
+}
+
 BattleLine.Factions.evaluateBattleQueue = function ( battleQueue ) {
     for ( var battle of battleQueue ) {
         var planet = battle[0]
@@ -141,14 +165,18 @@ BattleLine.Factions.evaluateBattleQueue = function ( battleQueue ) {
             var team2Roster = battle[2];
             var battleResult = BattleLine.Factions.simBattle( team1Roster, team2Roster );
             var rankBonus = Math.max(...(battleResult ? team1Roster : team2Roster).map( (o) => o.rank ));
-            BattleLine.factionMetal[0] += 100;
-            BattleLine.factionMetal[1] += 100;
-            BattleLine.processBattleResult( planet.id, 12 + rankBonus, battleResult );
+            
+            var dominanceDelta = BattleLine.Factions.computeDominanceDelta( rankBonus, planet.id, battleResult );
+            BattleLine.Factions.factionMetal[0] += 100;
+            BattleLine.Factions.factionMetal[1] += 100;
+            BattleLine.processBattleResult( planet.id, dominanceDelta, battleResult );
         }
         else {
             var pveTeam = battle[1];
             var faction = battle[2];
-            BattleLine.processBattleResult( planet.id, 6, faction );
+            var rankBonus = Math.max(...pveTeam.map( (o) => o.rank ));
+            var dominanceDelta = BattleLine.Factions.computeDominanceDelta( rankBonus, planet.id, faction );
+            BattleLine.processBattleResult( planet.id, dominanceDelta, faction );
         }
     }
 }
