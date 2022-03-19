@@ -172,3 +172,87 @@ BattleLine.Structures.activateStructures = function () {
         }
     }
 }
+
+BattleLine.Structures.drawStructures = function ( canvas, context ) {
+    //Offset for canvas dimensions not matching map dimensions, possibly future scrolling
+    var xOffset = (canvas.width - BattleLine.mapData.Dimensions.width) / 2;
+    var yOffset = (canvas.height - BattleLine.mapData.Dimensions.height) / 2;
+    
+    for ( var planet of BattleLine.mapData.Planets ) {
+        var structures = planet.structures;
+        var structureCounts = [0,0,0,0,0,0,0,0,0,0,0,0];
+        structures.forEach( (s) => structureCounts[s.typeId]++ );
+        var row = 0;
+        for ( var sID in structureCounts ) {
+            var sCount = structureCounts[sID];
+            if ( sCount > 0 ) {
+                var boxColor;
+                var boxCount;
+                
+                switch( Number(sID) ) {
+                    case 0: // T1 Power
+                        boxColor = "yellow";
+                        boxCount = 1;
+                        break;
+                    case 1: // T2 Power
+                        boxColor = "yellow";
+                        boxCount = 2;
+                        break;
+                    case 2: // T3 Power
+                        boxColor = "yellow";
+                        boxCount = 3;
+                        break;
+                    case 3: // Wormhole
+                        boxColor = "purple";
+                        boxCount = 1;
+                        break;
+                    case 4: // Improved Wormhole
+                        boxColor = "purple";
+                        boxCount = 2;
+                        break;
+                    case 5: // Wormhole Inhibitor
+                        boxColor = "red";
+                        boxCount = 1;
+                        break;
+                    case 6: // Field Garrison
+                        boxColor = "green";
+                        boxCount = 1;
+                        break;
+                    case 7: // Interception Network
+                        boxColor = "cyan";
+                        boxCount = 1;
+                        break;
+                    case 8: // Dropship Factory
+                        boxColor = "orange";
+                        boxCount = 1;
+                        break;
+                    case 9: // Bomber Factory
+                        boxColor = "blue";
+                        boxCount = 1;
+                        break;
+                    case 10: // Planetary Defense Grid
+                        boxColor = "green";
+                        boxCount = 2;
+                        break;
+                    case 11: // Artifact
+                        boxColor = "black";
+                        boxCount = 0;
+                        break;
+                }
+                
+                console.log(sID,boxCount,boxColor);
+                context.strokeStyle = 'black';
+                context.lineWidth = 1.0;
+                context.fillStyle = boxColor;
+                for ( var i = 0; i < boxCount; i++ ){
+                    var xPos = planet.position.x - planet.size + xOffset;
+                    var yPos = planet.position.y - planet.size + yOffset + 5 * row;
+                    context.fillRect( xPos, yPos, 4, 4 );
+                    context.strokeRect( xPos, yPos, 4, 4 );
+                }
+                
+                row++;
+            }
+        }
+    }
+}

@@ -46,6 +46,7 @@
     
     BattleLine.drawMap( canvas, context );
     updateDisplay();
+    BattleLine.Structures.drawStructures( canvas, context );
     
     canvas.addEventListener( 'mousedown', function (event) {
         var xOffset = canvas.offsetLeft + (canvas.width - BattleLine.mapData.Dimensions.width) / 2;
@@ -63,6 +64,7 @@
             }
             updateDisplay();
             BattleLine.drawMap( canvas, context );
+            BattleLine.Structures.drawStructures( canvas, context );
         }
     });
     canvas.addEventListener( 'contextmenu', function(event) {
@@ -77,6 +79,7 @@
             BattleLine.Structures.activateStructures();
             updateDisplay();
             BattleLine.drawMap( canvas, context );
+            BattleLine.Structures.drawStructures( canvas, context );
         }
     });
 </script>
