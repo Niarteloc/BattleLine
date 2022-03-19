@@ -107,7 +107,7 @@ BattleLine.Structures.newStructure = function ( typeId ) {
     return newStructure;
 }
 
-BattleLine.Structures.initialize = function() {
+BattleLine.Structures.initialize = function () {
     BattleLine.Structures.StructureList = [];
     var structureId = 0;
     for ( var planet of BattleLine.mapData.Planets ) {
@@ -121,4 +121,17 @@ BattleLine.Structures.initialize = function() {
             structureId++;
         }
     }
+}
+
+BattleLine.Structures.buildStructure = function ( planetId, typeId, faction ) {
+    var planet = BattleLine.mapData.Planets[planetId];
+    
+    if ( planet.owner != faction ) throw "Can't build on unowned planet!";
+    if ( BattleLine.Structures.StructureTypes[typeId].metalCost > BattleLine.Factions.factionMetal[faction - 1] ) throw "Not enough metal to build!";
+    
+    var structure = BattleLine.Structures.newStructure( typeId );
+    structure.id = BattleLine.Structures.StructureList.length;
+    structure.planetId = planetId;
+    planet.structures.push(structure);
+    BattleLine.Structures.StructureList.push(structure);
 }
