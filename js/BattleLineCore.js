@@ -218,10 +218,12 @@ BattleLine.processBattleResult = function ( planetID, dominanceChange, victorFac
     }
     
     
-    if ( (planet.dominantFaction == victorFaction) && BattleLine.util.isPlanetConnected( planetID ) ) {
-        planet.dominance += dominanceChange;
-        if ( planet.dominance >= BattleLine.MAX_DOMINANCE ) {
-            BattleLine.conquerPlanet( planetID, victorFaction );
+    if ( (planet.dominantFaction == victorFaction) ) {
+        if ( BattleLine.util.isPlanetConnected( planetID ) ) {
+            planet.dominance += dominanceChange;
+            if ( planet.dominance >= BattleLine.MAX_DOMINANCE ) {
+                BattleLine.conquerPlanet( planetID, victorFaction );
+            }
         }
     }
     else {
