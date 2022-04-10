@@ -137,6 +137,49 @@ BattleLine.util.getPlanetAtXY = function ( x, y ) {
     }
 }
 
+BattleLine.util.isPlanetConnected = function ( planetID ) {
+    var planet = BattleLine.mapData.Planets[planetID];
+    
+    if ( planet.owner != 0 ) return true;
+    
+    var travesedPlanets = [];
+    var endpointPlanets = [planet];
+    
+    while ( endpointPlanets.length > 0 ) {
+        var endpointPlanet = endpointPlanets.pop();
+        for ( var neighborID of BattleLine.util.getNeighbors( endpointPlanet.id ) ) {
+            var neighbor = BattleLine.mapData.Planets[neighborID];
+            if ( neighbor.owner == planet.dominantFaction ) {
+                return true;
+            }
+            else if ( neighbor.dominantFaction == planet.dominantFaction ) {
+                if ( !travesedPlanets.includes( neighbor ) ) {
+                    endpointPlanets.push( neighbor );
+                }
+            }
+        }
+        travesedPlanets.push( endpointPlanet );
+    }
+    
+    return false;
+}
+
+BattleLine.controlContestedPlanets = function () {
+    for ( var planet of BattleLine.mapData.Planets ) {
+        if ( planet.owner == 0 ) {
+            var nextNeighbors = BattleLine.util.getNeighbors( pid );
+            var contested = nextNeighbors.some( function( pid ) { 
+                return (BattleLine.mapData.Planets[pid].owner != planet.dominantFaction);
+            } );
+            
+            if ( !contested ){
+                neighboringPlanet.owner = faction;
+                neighboringPlanet.dominance = BattleLine.MAX_DOMINANCE;
+            }
+        }
+    }
+}
+
 BattleLine.conquerPlanet = function ( planetID, faction ) {
     var planet = BattleLine.mapData.Planets[planetID];
     var neighbors = BattleLine.util.getNeighbors( planetID );
@@ -159,20 +202,7 @@ BattleLine.conquerPlanet = function ( planetID, faction ) {
     }
     
     //Contested planets can become controlled
-    for ( var pid of neighbors ) {
-        var neighboringPlanet = BattleLine.mapData.Planets[pid];
-        if ( neighboringPlanet.owner == 0 && neighboringPlanet.dominantFaction == faction ) {
-            var nextNeighbors = BattleLine.util.getNeighbors( pid );
-            var contested = nextNeighbors.some( function( pid ) { 
-                return (BattleLine.mapData.Planets[pid].owner != 0 && BattleLine.mapData.Planets[pid].owner != faction);
-            } );
-            
-            if ( !contested ){
-                neighboringPlanet.owner = faction;
-                neighboringPlanet.dominance = BattleLine.MAX_DOMINANCE;
-            }
-        }
-    }
+    BattleLine.controlContestedPlanets();
 }
 
 BattleLine.processBattleResult = function ( planetID, dominanceChange, victorFaction ) {
@@ -182,7 +212,8 @@ BattleLine.processBattleResult = function ( planetID, dominanceChange, victorFac
         throw "Can't fight on a controlled planet!";
     }
     
-    if ( planet.dominantFaction == victorFaction ) {
+    
+    if ( (planet.dominantFaction == victorFaction) && BattleLine.util.isPlanetConnected( planetID ) ) {
         planet.dominance += dominanceChange;
         if ( planet.dominance >= BattleLine.MAX_DOMINANCE ) {
             BattleLine.conquerPlanet( planetID, victorFaction );
@@ -193,6 +224,7 @@ BattleLine.processBattleResult = function ( planetID, dominanceChange, victorFac
         if ( planet.dominance < 0 ) {
             planet.dominantFaction = victorFaction;
             planet.dominance = 0;
+            BattleLine.controlContestedPlanets();
         }
     }
 }
