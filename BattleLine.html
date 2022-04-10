@@ -5,6 +5,7 @@
 <script type="text/javascript" src="js/BattleLineStructures.js"></script>
 <script type="text/javascript" src="data/map1.json"></script>
 <script type="text/javascript" src="data/map2.json"></script>
+<script type="text/javascript" src="data/map3.json"></script>
 <script type="text/javascript" src="data/namelist.json"></script>
 </head>
 <body>
@@ -42,9 +43,10 @@
     var canvas = document.getElementById( 'display' );
     var context = canvas.getContext( '2d' );
     
-    BattleLine.initialize( map2 );
+    BattleLine.initialize( map3 );
     BattleLine.Factions.initialize( 10, names );
     BattleLine.Structures.initialize();
+    BattleLine.controlContestedPlanets();
     
     BattleLine.drawMap( canvas, context );
     updateDisplay();

@@ -1,0 +1,259 @@
+var map3 = {
+    "Dimensions" : {
+        "width" : 500,
+        "height" : 300
+    },
+    "Planets" : [
+    {
+        "id" : 0,
+        "name" : "My Home",
+        "size" : 20,
+        "position" : {
+            "x" : 30,
+            "y" : 150
+        },
+        "homeworld" : true,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 1,
+        "name" : "C1 R1",
+        "size" : 20,
+        "position" : {
+            "x" : 100,
+            "y" : 75
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 2,
+        "name" : "C1 R2",
+        "size" : 20,
+        "position" : {
+            "x" : 100,
+            "y" : 125
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 3,
+        "name" : "C1 R3",
+        "size" : 20,
+        "position" : {
+            "x" : 100,
+            "y" : 175
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 4,
+        "name" : "C1 R4",
+        "size" : 20,
+        "position" : {
+            "x" : 100,
+            "y" : 225
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 1
+    },
+    {
+        "id" : 5,
+        "name" : "C2 R1",
+        "size" : 20,
+        "position" : {
+            "x" : 200,
+            "y" : 75
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 6,
+        "name" : "C2 R2",
+        "size" : 20,
+        "position" : {
+            "x" : 200,
+            "y" : 125
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 7,
+        "name" : "C2 R3",
+        "size" : 20,
+        "position" : {
+            "x" : 200,
+            "y" : 175
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 8,
+        "name" : "C2 R4",
+        "size" : 20,
+        "position" : {
+            "x" : 200,
+            "y" : 225
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 9,
+        "name" : "C3 R1",
+        "size" : 20,
+        "position" : {
+            "x" : 300,
+            "y" : 75
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 10,
+        "name" : "C3 R2",
+        "size" : 20,
+        "position" : {
+            "x" : 300,
+            "y" : 125
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 11,
+        "name" : "C3 R3",
+        "size" : 20,
+        "position" : {
+            "x" : 300,
+            "y" : 175
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 12,
+        "name" : "C3 R4",
+        "size" : 20,
+        "position" : {
+            "x" : 300,
+            "y" : 225
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 0
+    },
+    {
+        "id" : 13,
+        "name" : "C4 R1",
+        "size" : 20,
+        "position" : {
+            "x" : 400,
+            "y" : 75
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 2
+    },
+    {
+        "id" : 14,
+        "name" : "C4 R2",
+        "size" : 20,
+        "position" : {
+            "x" : 400,
+            "y" : 125
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 2
+    },
+    {
+        "id" : 15,
+        "name" : "C4 R3",
+        "size" : 20,
+        "position" : {
+            "x" : 400,
+            "y" : 175
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 2
+    },
+    {
+        "id" : 16,
+        "name" : "C4 R4",
+        "size" : 20,
+        "position" : {
+            "x" : 400,
+            "y" : 225
+        },
+        "homeworld" : false,
+        "artifact" : false,
+        "owner" : 2
+    },
+    {
+        "id" : 17,
+        "name" : "Enemy Home",
+        "size" : 20,
+        "position" : {
+            "x" : 470,
+            "y" : 150
+        },
+        "homeworld" : true,
+        "artifact" : false,
+        "owner" : 2
+    }
+    
+    ],
+    "Connections" : [
+        [0,1],
+        [0,2],
+        [0,3],
+        [0,4],
+        [1,2],
+        [1,5],
+        [2,3],
+        [2,6],
+        [3,4],
+        [3,7],
+        [4,8],
+        [5,6],
+        [5,9],
+        [6,7],
+        [6,10],
+        [7,8],
+        [7,11],
+        [8,12],
+        [9,10],
+        [9,13],
+        [10,11],
+        [10,14],
+        [11,12],
+        [11,15],
+        [12,16],
+        [13,14],
+        [13,17],
+        [14,15],
+        [14,17],
+        [15,16],
+        [15,17],
+        [16,17]
+    ]
+}
