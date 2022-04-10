@@ -61,7 +61,15 @@
         if ( nearestPlanetID >= 0 ) {
             var nearestPlanet = BattleLine.mapData.Planets[nearestPlanetID];
             
-            if ( mouseState < 0 ) {
+            if ( event.ctrlKey ) {
+                if ( event.button == 0 ) {
+                    BattleLine.conquerPlanet( nearestPlanetID, 1 );
+                }
+                else if ( event.button == 2 ) {
+                    BattleLine.conquerPlanet( nearestPlanetID, 2 );
+                }
+            }
+            else if ( mouseState < 0 ) {
                 if ( event.button == 0 ) {
                     nearestPlanet.priority[0] = Math.min(10, nearestPlanet.priority[0] + 1);
                 }

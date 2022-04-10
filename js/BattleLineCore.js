@@ -169,14 +169,14 @@ BattleLine.util.isPlanetConnected = function ( planetID ) {
 BattleLine.controlContestedPlanets = function () {
     for ( var planet of BattleLine.mapData.Planets ) {
         if ( planet.owner == 0 ) {
-            var nextNeighbors = BattleLine.util.getNeighbors( pid );
+            var nextNeighbors = BattleLine.util.getNeighbors( planet.id );
             var contested = nextNeighbors.some( function( pid ) { 
-                return (BattleLine.mapData.Planets[pid].owner != planet.dominantFaction);
+                return (BattleLine.mapData.Planets[pid].owner != 0 && BattleLine.mapData.Planets[pid].owner != planet.dominantFaction);
             } );
             
             if ( !contested ){
-                neighboringPlanet.owner = faction;
-                neighboringPlanet.dominance = BattleLine.MAX_DOMINANCE;
+                planet.owner = planet.dominantFaction;
+                planet.dominance = BattleLine.MAX_DOMINANCE;
             }
         }
     }
@@ -184,6 +184,9 @@ BattleLine.controlContestedPlanets = function () {
 
 BattleLine.conquerPlanet = function ( planetID, faction ) {
     var planet = BattleLine.mapData.Planets[planetID];
+    
+    if ( !BattleLine.util.isPlanetConnected( planetID ) ) throw "Error: planet is not valid capture target (not connected to a controlled planet)"
+    
     var neighbors = BattleLine.util.getNeighbors( planetID );
     
     planet.dominance = BattleLine.MAX_DOMINANCE;
